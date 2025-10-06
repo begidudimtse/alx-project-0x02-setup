@@ -1,57 +1,44 @@
-import React, { useEffect, useState } from "react";
+// pages/posts.tsx
+import React from "react";
 import Header from "@/components/layout/Header";
 import PostCard from "@/components/common/PostCard";
+import { PostProps } from "@/interfaces";
 
-interface PostData {
-  id: number;
-  title: string;
-  body: string;
-  userId: number;
+interface PostsPageProps {
+  posts: PostProps[];
 }
 
-const PostsPage = () => {
-  const [posts, setPosts] = useState<PostData[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-        const data = await res.json();
-        setPosts(data.slice(0, 10)); // limit to 10 posts for cleaner view
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
-
+const PostsPage: React.FC<PostsPageProps> = ({ posts }) => {
   return (
     <div>
       <Header />
       <main className="p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">Posts</h1>
-
-        {loading ? (
-          <p className="text-gray-500">Loading posts...</p>
-        ) : (
-          <div className="space-y-4">
-            {posts.map((post) => (
-              <PostCard
-                key={post.id}
-                title={post.title}
-                content={post.body}
-                userId={post.userId}
-              />
-            ))}
-          </div>
-        )}
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Posts</h1>
+        <div className="grid gap-4">
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              title={post.title}
+              content={post.body}
+              userId={post.userId}
+            />
+          ))}
+        </div>
       </main>
     </div>
   );
 };
+
+// ✅ This function enables static data fetching
+export async function getStaticProps() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts?_limit=5");
+  const posts = await res.json();
+
+  return {
+    props: {
+      posts,
+    },
+  };
+}
 
 export default PostsPage;
