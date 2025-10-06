@@ -1,5 +1,6 @@
 import React from "react";
 import  Header  from "@/components/layout/Header";
+import Card from "@/components/common/Card"
 
 const HomePage = () => {
   return (
@@ -10,6 +11,13 @@ const HomePage = () => {
         <p className="mt-4 text-gray-600">
           This is the main page of your Next.js app.
         </p>
+
+        {/* Cards Section */}
+        <div className="mt-6 space-y-4">
+          <Card title="Card 1" content="This is the content of card 1." />
+          <Card title="Card 2" content="This is the content of card 2." />
+          <Card title="Card 3" content="This is the content of card 3." />
+        </div>
       </main>
     </div>
   );
