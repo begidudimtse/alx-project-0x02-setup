@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import  Header  from "@/components/layout/Header";
-import Card from "@/components/common/Card"
+import Card from "@/components/common/Card";
+import PostModal from "@/components/common/PostModal";
+
+interface Post {
+  title: string;
+  content: string;
+}
 
 const HomePage = () => {
+    const [posts, setPosts] = useState<Post[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAddPost = (title: string, content: string) => {
+    setPosts((prev) => [...prev, { title, content }]);
+  };
+
   return (
     <div>
       <Header />
@@ -12,11 +25,26 @@ const HomePage = () => {
           This is the main page of your Next.js app.
         </p>
 
-        {/* Cards Section */}
+       {/* Open Modal Button */}
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="mt-6 px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          Add New Post
+        </button>
+
+        {/* Post Modal */}
+        <PostModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onAddPost={handleAddPost}
+        />
+
+        {/* Posts */}
         <div className="mt-6 space-y-4">
-          <Card title="Card 1" content="This is the content of card 1." />
-          <Card title="Card 2" content="This is the content of card 2." />
-          <Card title="Card 3" content="This is the content of card 3." />
+          {posts.map((post, index) => (
+            <Card key={index} title={post.title} content={post.content} />
+          ))}
         </div>
       </main>
     </div>
